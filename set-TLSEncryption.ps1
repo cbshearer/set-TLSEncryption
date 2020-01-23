@@ -56,9 +56,13 @@
         New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'   -Force | Out-Null
         New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' -Force | Out-Null
     ## Set values
-        New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56'     -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null
+        New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56'     -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null 
         New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'   -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null
         New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null
+
+#####################
+#### DANGER ZONE #### 
+#####################
 
 ### Set Cipher Functions with values from https://www.grc.com/miscfiles/SChannel_Cipher_Suites.txt
     $FunctionValues = $null
@@ -93,7 +97,11 @@ TLS_RSA_WITH_AES_128_CBC_SHA,
 TLS_RSA_WITH_3DES_EDE_CBC_SHA,
 SSL_CK_DES_192_EDE3_CBC_WITH_MD5"
 
-    Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues -type string
+    Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues -type MultiString 
 }
 
-else {Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues.content -type string}
+else {Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues.content -type MultiString}
+
+<#
+$thisdata = Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions'
+$thisdata.functions #>
