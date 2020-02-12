@@ -1,4 +1,5 @@
 ### Backup the "SCHANNEL Protocols" registry key
+    if (!(test-path c:\temp)) {mkdir c:\temp}
     Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg
 
 ### Disable Protocols
