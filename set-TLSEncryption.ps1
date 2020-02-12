@@ -66,45 +66,4 @@
 #####################
 #### DANGER ZONE #### 
 #####################
-
-### Set Cipher Functions with values from https://www.grc.com/miscfiles/SChannel_Cipher_Suites.txt
-    $FunctionValues = $null
-    $FunctionValues = Invoke-WebRequest https://www.grc.com/miscfiles/SChannel_Cipher_Suites.txt | Out-Null
-    $FunctionValues = $FunctionValues.content
-
-if (!($FunctionValues))
-    {$FunctionValues = "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384_P384,
-TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA_P384,
-TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P384,
-TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA_P256,
-TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P256,
-TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256_P384,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256_P384,
-TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256_P256,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256_P256,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA_P384,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA_P256,
-TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P384,
-TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256,
-TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P384,
-TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256,
-TLS_DHE_DSS_WITH_AES_256_CBC_SHA256,
-TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_128_CBC_SHA256,
-TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
-TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA,
-TLS_RSA_WITH_AES_256_CBC_SHA256,
-TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_RSA_WITH_AES_128_CBC_SHA256,
-TLS_RSA_WITH_AES_128_CBC_SHA,
-TLS_RSA_WITH_3DES_EDE_CBC_SHA,
-SSL_CK_DES_192_EDE3_CBC_WITH_MD5"
-
-    Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues -type MultiString 
-}
-
-else {Set-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -name "Functions" -value $FunctionValues.content -type MultiString}
-
-<#
-$thisdata = Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002' -Name 'Functions'
-$thisdata.functions #>
+## Look at https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78 for doing better work setting secure ciphers
