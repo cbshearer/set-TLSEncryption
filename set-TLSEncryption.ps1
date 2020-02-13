@@ -1,8 +1,17 @@
-### Backup the "SCHANNEL Protocols" registry key
-    $regBackup =  "c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    if (!(test-path c:\temp)) {mkdir c:\temp}
-    Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg
-    if (!(test-path $regbackup)) {exit}
+### Set backup location for registry keys
+    $BakProto =       "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakCipher =      "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakSCHANNEL    = "c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+
+    ## If c:\temp doesn't exist, then create it
+            if (!(test-path c:\temp)) {mkdir c:\temp}
+
+    ## Backup the SCHANNEL registry keys
+        Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"             $BakProto
+        Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers"               $BakCipher
+        Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms" $BakKeyExchange
+        Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\"                      $BakSCHANNEL
 
 ### Disable Protocols
 ### SSL 2.0
