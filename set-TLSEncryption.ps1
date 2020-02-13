@@ -1,6 +1,6 @@
 ### Set backup location for registry keys
-    $BakProto =       "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    $BakCipher =      "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakProto       = "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakCipher      = "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
     $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
     $BakSCHANNEL    = "c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
 
