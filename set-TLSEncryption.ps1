@@ -13,7 +13,7 @@
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms" $BakKeyExchange
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\"                      $BakSCHANNEL
 
-### Disable Protocols
+### Disable Protocols - Reboot required to take effect
     ### SSL 2.0
         ## Server
             New-Item               'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Server' -Force | Out-Null
@@ -75,18 +75,7 @@
             New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client' -name 'DisabledByDefault' -value 0 -PropertyType 'DWord' -Force | Out-Null
             Write-Host 'TLS 1.2 client has been ENABLED.'
         
-### Disable old Ciphers
-    ## Make sure keys exist
-        New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'                -Force | Out-Null
-        New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56'      -Force | Out-Null
-        New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'    -Force | Out-Null
-        New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' -Force | Out-Null
-    ## Set values
-        New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56'      -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null 
-        New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'    -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null
-        New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168' -name 'Enabled' -value '0' -PropertyType 'DWord' -Force | Out-Null
-
-### Disable inecure ciphers. credit: https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
+### Disable inecure ciphers. - Reboot not required to take effect - credit: https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
     ## List ciphers
         $insecureCiphers = @(
           'DES 56/56',
@@ -110,7 +99,7 @@
               Write-Host "Weak cipher $insecureCipher has been disabled."
             }
 
-### Set key length for Diffie Hellman Exchange to 2048 (default is 1024)
+### Set key length for Diffie Hellman Exchange to 2048 (default is 1024) - Reboot not required to take effect
     ## Test to make sure the key exists, if not then create it
         if (!(test-path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman'))
             {New-Item   'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force | Out-Null}
