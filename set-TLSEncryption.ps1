@@ -2,7 +2,7 @@
     $BakProto       = "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
     $BakCipher      = "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
     $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    $BakSCHANNEL    = "c:\temp\pre_schannel_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+    $BakSCHANNEL    = "c:\temp\pre_schannel_all_key__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
 
     ## If c:\temp doesn't exist, then create it
             if (!(test-path c:\temp)) {mkdir c:\temp}
@@ -50,7 +50,7 @@
             New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client' -name 'DisabledByDefault' -value 1 -PropertyType 'DWord' -Force | Out-Null
             Write-Host 'TLS 1.0 client has been DISABLED.'
 
-### Enable Protocols
+### Enable Protocols - Reboot required to take effect
     ### TLS 1.1
         ## Server
             New-Item               'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server' -Force | Out-Null
@@ -75,7 +75,7 @@
             New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client' -name 'DisabledByDefault' -value 0 -PropertyType 'DWord' -Force | Out-Null
             Write-Host 'TLS 1.2 client has been ENABLED.'
         
-### Disable inecure ciphers. - Reboot not required to take effect - credit: https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
+### Disable inecure ciphers - Reboot not required to take effect - credit: https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
     ## List ciphers
         $insecureCiphers = @(
           'DES 56/56',
@@ -89,7 +89,7 @@
           'RC4 128/128',
           'Triple DES 168')
 
-    ## Loop through ciphers and create the keys if they don't exist, and set the value to 0
+    ## Loop through insecure ciphers and create the registry keys if they don't exist, and disable them
         Foreach ($insecureCipher in $insecureCiphers) 
             {
               $key = (Get-Item HKLM:\).OpenSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers', $true).CreateSubKey($insecureCipher)
