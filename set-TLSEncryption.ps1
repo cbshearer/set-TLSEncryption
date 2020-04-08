@@ -64,7 +64,7 @@
             New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client' -name 'DisabledByDefault' -value 1 -PropertyType 'DWord' -Force | Out-Null
             Write-Host 'TLS 1.1 client has been DISABLED.'
 
-            ### Enable Protocols - Reboot required to take effect
+### Enable Protocols - Reboot required to take effect
     ### TLS 1.2
         ## Server
             New-Item               'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server' -Force | Out-Null
