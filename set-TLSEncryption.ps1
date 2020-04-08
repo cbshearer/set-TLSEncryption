@@ -1,13 +1,14 @@
 ## from https://gist.github.com/cbshearer/9f7ce373c115c842fc3025d238cbca36#file-setupiisforsslperfectforwardsecrecy_v17-ps1-L2
 
-### Set backup location for registry keys
-    $BakProto       = "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    $BakCipher      = "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
-    $BakSCHANNEL    = "c:\temp\pre_schannel_all_key__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+## Backup current settings
+    ### Set backup location for registry keys
+        $BakProto       = "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+        $BakCipher      = "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+        $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+        $BakSCHANNEL    = "c:\temp\pre_schannel_all_key__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
 
     ## If c:\temp doesn't exist, then create it
-            if (!(test-path c:\temp)) {mkdir c:\temp}
+        if (!(test-path c:\temp)) {mkdir c:\temp}
 
     ## Backup the SCHANNEL registry keys
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"             $BakProto
