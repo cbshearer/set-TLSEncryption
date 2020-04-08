@@ -81,26 +81,43 @@
 ### Disable inecure ciphers - Reboot not required to take effect - credit: https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
     ## List ciphers
         $insecureCiphers = @(
-          'DES 56/56',
-          'NULL',
-          'RC2 128/128',
-          'RC2 40/128',
-          'RC2 56/128',
-          'RC4 40/128',
-          'RC4 56/128',
-          'RC4 64/128',
-          'RC4 128/128',
-          'Triple DES 168')
+            'DES 56/56',
+            'NULL',
+            'RC2 128/128',
+            'RC2 40/128',
+            'RC2 56/128',
+            'RC4 40/128',
+            'RC4 56/128',
+            'RC4 64/128',
+            'RC4 128/128',
+            'Triple DES 168')
 
     ## Loop through insecure ciphers and create the registry keys if they don't exist, and disable them
         Foreach ($insecureCipher in $insecureCiphers) 
             {
-              $key = (Get-Item HKLM:\).OpenSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers', $true).CreateSubKey($insecureCipher)
-              $key.SetValue('Enabled', 0, 'DWord')
-              $key.close()
-  
-              Write-Host "Weak cipher $insecureCipher has been disabled."
+                $key = (Get-Item HKLM:\).OpenSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers', $true).CreateSubKey($insecureCipher)
+                $key.SetValue('Enabled', 0, 'DWord')
+                $key.close()
+                Write-Host "Weak cipher $insecureCipher has been disabled."
             }
+
+### Enable new secure ciphers
+    ## List ciphers
+        $secureCiphers = @(
+            'AES 128/128',
+            'AES 256/256')
+
+    ## Loop through secure ciphers, create the kesy if they don't exist and enable them
+        Foreach ($secureCipher in $secureCiphers) 
+            {
+                $key = (Get-Item HKLM:\).OpenSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers', $true).CreateSubKey($secureCipher)
+                New-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$secureCipher" -name 'Enabled' -value '0xffffffff' -PropertyType 'DWord' -Force | Out-Null
+                $key.close()
+                Write-Host "Strong cipher $secureCipher has been enabled."
+            }
+
+
+
 
 ### Set key length for Diffie Hellman Exchange to 2048 (default is 1024) - Reboot not required to take effect
     ## Test to make sure the key exists, if not then create it
