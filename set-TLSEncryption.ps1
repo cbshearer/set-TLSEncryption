@@ -5,6 +5,7 @@
         $BakProto       = "c:\temp\pre_schannel_protocol_updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
         $BakCipher      = "c:\temp\pre_schannel_cipher___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
         $BakKeyExchange = "c:\temp\pre_schannel_keyExch__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
+        $BakHashes      = "c:\temp\pre_schannel_hashes___updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
         $BakSCHANNEL    = "c:\temp\pre_schannel_all_key__updates-$(get-date -f yyyy-MM-dd_HH-mm-ss).reg"
 
     ## If c:\temp doesn't exist, then create it
@@ -14,6 +15,7 @@
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"             $BakProto
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers"               $BakCipher
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms" $BakKeyExchange
+        Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes"                $BakHashes
         Reg export "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\"                      $BakSCHANNEL
 
 ### Disable Protocols - Reboot required to take effect
@@ -116,8 +118,26 @@
                 Write-Host "Strong cipher $secureCipher has been enabled."
             }
 
+### Set hash configuration
+    New-Item 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes' -Force | Out-Null
+    New-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5' -Force | Out-Null
+    New-ItemProperty -path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5' -name Enabled -value 0 -PropertyType 'DWord' -Force | Out-Null
 
-
+    ## List hashes
+        $secureHashes = @(
+          'SHA',
+          'SHA256',
+          'SHA384',
+          'SHA512')
+          
+    ## Loop through secure hashes. Create a subkey if needed
+        Foreach ($secureHash in $secureHashes) 
+        {
+          $key = (Get-Item HKLM:\).OpenSubKey('SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes', $true).CreateSubKey($secureHash)
+          New-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\$secureHash" -name 'Enabled' -value '0xffffffff' -PropertyType 'DWord' -Force | Out-Null
+          $key.close()
+          Write-Host "Hash $secureHash has been enabled."
+        }
 
 ### Set key length for Diffie Hellman Exchange to 2048 (default is 1024) - Reboot not required to take effect
     ## Test to make sure the key exists, if not then create it
