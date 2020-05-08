@@ -1,4 +1,4 @@
-## from https://gist.github.com/cbshearer/9f7ce373c115c842fc3025d238cbca36#file-setupiisforsslperfectforwardsecrecy_v17-ps1-L2
+## from https://gist.github.com/jbratu/6262684939e15e638892973f5f8eed78
 
 ## Backup current settings
     ### Set backup location for registry keys
